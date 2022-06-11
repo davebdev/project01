@@ -25,6 +25,7 @@ const checkGuess = () => {
 };
 
 const takeCompTurn = () => {
+  const currentWordLength = currentWord.length; // get length of word so far
   let lwLength = 0; // set longest word length at 0
   let lwIndex = 0; // set longest word index at 0
   compWords.length = 0; // clear compWords array
@@ -61,6 +62,13 @@ const takeCompTurn = () => {
     computerGuess = "Error here";
   }
   console.log(computerGuess);
+
+  let compNextLetter = "";
+  compNextLetter = computerGuess.slice(
+    currentWordLength,
+    currentWordLength + 1
+  ); // get computer's next letter (first letter of computer's guess after current word so far)
+  console.log("computer next letter:" + compNextLetter);
 };
 
 const submitButton = document.getElementById("submit");
