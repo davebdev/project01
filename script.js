@@ -20,6 +20,20 @@ const checkGuess = () => {
     }
   }
   console.log(gameList); // check gameList for correct responses
+  takeCompTurn();
+};
+
+const takeCompTurn = () => {
+  let lwLength = 0;
+  let lwIndex = 0;
+  const compWords = [];
+  for (i in gameList) {
+    if (gameList[i].length > lwLength) {
+      lwIndex = i;
+      lwLength = gameList[i].length;
+    }
+  }
+  console.log("Longest word: " + gameList[lwIndex] + "; Length: " + lwLength);
 };
 
 const submitButton = document.getElementById("submit");
