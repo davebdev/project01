@@ -1,3 +1,20 @@
+
+input[type=text] {
+    display: inline;
+    width: 100px;
+    height: 100px;
+    font-size: 40px;
+    text-align: center;
+}
+
 input[type=text]:read-only {
     background-color: lightgray;
+}
+
+input[type=text]:focus {
+    caret-color: transparent;
+}
+
+#message {
+    height: 100px;
 }
