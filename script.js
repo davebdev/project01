@@ -5,13 +5,16 @@ let currentWord = "";
 
 const checkGuess = () => {
   gameList.length = 0; // empties array
-  console.log("current word:" + currentWord);
+  currentWord = ""; // clear currentWord so fresh check can be made
 
   const letterboxes = document.querySelectorAll(".letterbox");
   letterboxes.forEach((element) => (currentWord = currentWord + element.value)); // get current word by stringing values of all letterboxes together
 
   currentWord = currentWord.toLowerCase(); // change value to lower case
   console.log("current word:" + currentWord);
+
+  const currentWordLength = currentWord.length; // get length of word so far
+  console.log("current word length:" + currentWordLength);
 
   const regex = new RegExp("^" + currentWord); // create regex using that value - '^' means any match that starts with
   //   console.log(regex); // testing regex
@@ -22,12 +25,26 @@ const checkGuess = () => {
       gameList.push(word); // add it to 'gameList' array
     }
   }
+
+  if (gameList.length === 0) {
+    console.log("Word does not exist");
+  } else {
+    takeCompTurn();
+    const newUserInput = document.createElement("input");
+    newUserInput.type = "text"; // make input type text
+    newUserInput.maxLength = 1; // give input max length of 1
+    newUserInput.classList.add("letterbox"); // add 'letterbox' class to input
+    newUserInput.id = "letter-" + (currentWordLength + 1); // give input unique id
+    newUserInput.value = ""; // give input value of computer's next letter
+    newUserInput.readOnly = false; // make input readonly
+    document.getElementById("word").appendChild(newUserInput); // append input to div
+  }
   console.log("Current applicable list of words: ", gameList); // check gameList for correct responses
-  takeCompTurn();
 };
 
 const takeCompTurn = () => {
   const currentWordLength = currentWord.length; // get length of word so far
+  console.log("current word length:" + currentWordLength);
   let lwLength = 0; // set longest word length at 0
   let lwIndex = 0; // set longest word index at 0
   compWords.length = 0; // clear compWords array
@@ -72,14 +89,14 @@ const takeCompTurn = () => {
   ); // get computer's next letter (first letter of computer's guess after current word so far)
   console.log("computer next letter:" + compNextLetter);
 
-  const newInput = document.createElement("input"); // create new Input tag
-  newInput.type = "text"; // make input type text
-  newInput.maxLength = 1; // give input max length of 1
-  newInput.classList.add("letterbox"); // add 'letterbox' class to input
-  newInput.id = "letter-" + currentWordLength; // give input unique id
-  newInput.value = compNextLetter; // give input value of computer's next letter
-  newInput.readOnly = true; // make input readonly
-  document.getElementById("word").appendChild(newInput); // append input to div
+  const newCompInput = document.createElement("input"); // create new Input tag
+  newCompInput.type = "text"; // make input type text
+  newCompInput.maxLength = 1; // give input max length of 1
+  newCompInput.classList.add("letterbox"); // add 'letterbox' class to input
+  newCompInput.id = "letter-" + currentWordLength; // give input unique id
+  newCompInput.value = compNextLetter; // give input value of computer's next letter
+  newCompInput.readOnly = true; // make input readonly
+  document.getElementById("word").appendChild(newCompInput); // append input to div
 };
 
 const submitButton = document.getElementById("submit");
