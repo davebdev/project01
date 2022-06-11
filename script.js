@@ -1,4 +1,3 @@
-const wordList = ["test", "word", "game", "tesseract", "tesserect"];
 const gameList = []; // create an array for all possible words based on letters so far
 const compWords = []; // create an array for all the longest words the computer has to choose from
 
