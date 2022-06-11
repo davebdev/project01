@@ -6,10 +6,12 @@ let currentWord = "";
 const checkGuess = () => {
   gameList.length = 0; // empties array
   console.log("current word:" + currentWord);
-  currentWord = currentWord + document.getElementById("letter01").value; // adds 1st value from user entry to currentWord variable
-  currentWord = currentWord + document.getElementById("letter02").value; // adds 2nd value from user entry to currentWord variable
-  currentWord = currentWord + document.getElementById("letter03").value; // adds 3rd value from user entry to currentWord variable
+
+  const letterboxes = document.querySelectorAll(".letterbox");
+  letterboxes.forEach((element) => (currentWord = currentWord + element.value)); // get current word by stringing values of all letterboxes together
+
   currentWord = currentWord.toLowerCase(); // change value to lower case
+  console.log("current word:" + currentWord);
 
   const regex = new RegExp("^" + currentWord); // create regex using that value - '^' means any match that starts with
   //   console.log(regex); // testing regex
@@ -20,7 +22,7 @@ const checkGuess = () => {
       gameList.push(word); // add it to 'gameList' array
     }
   }
-  console.log(gameList); // check gameList for correct responses
+  console.log("Current applicable list of words: ", gameList); // check gameList for correct responses
   takeCompTurn();
 };
 
@@ -43,10 +45,10 @@ const takeCompTurn = () => {
       compWords.push(word);
     }
   }
-  console.log(compWords);
+  console.log("computer's list of words: ", compWords);
   let computerGuess = ""; // declare computer's guess variable
   const cwLength = compWords.length; // hold compWord array length in a variable
-  console.log(cwLength);
+  console.log("computer's word's length: " + cwLength);
   if (cwLength === 0) {
     // if array length is 0, no more matching words for computer
     computerGuess = "No more moves for you, computer!";
@@ -59,9 +61,9 @@ const takeCompTurn = () => {
     computerGuess = compWords[cwi];
   } else {
     // error catching
-    computerGuess = "Error here";
+    computerGuess = "Error";
   }
-  console.log(computerGuess);
+  console.log("computer guess: " + computerGuess);
 
   let compNextLetter = "";
   compNextLetter = computerGuess.slice(
@@ -69,6 +71,15 @@ const takeCompTurn = () => {
     currentWordLength + 1
   ); // get computer's next letter (first letter of computer's guess after current word so far)
   console.log("computer next letter:" + compNextLetter);
+
+  const newInput = document.createElement("input"); // create new Input tag
+  newInput.type = "text"; // make input type text
+  newInput.maxLength = 1; // give input max length of 1
+  newInput.classList.add("letterbox"); // add 'letterbox' class to input
+  newInput.id = "letter-" + currentWordLength; // give input unique id
+  newInput.value = compNextLetter; // give input value of computer's next letter
+  newInput.readOnly = true; // make input readonly
+  document.getElementById("word").appendChild(newInput); // append input to div
 };
 
 const submitButton = document.getElementById("submit");
