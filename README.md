@@ -1,6 +1,6 @@
-# Stack's On!
+# Spell Checkers!
 
-Stack's On! is a game played against the computer. Loser (or computer, if first go) starts with the first letter, then the computer gets to add a letter, and each player takes turns to add letters until a word is made. Whoever finishes the word gets the points.
+Spell Checkers! is a game played against the computer. Loser (or computer, if first go) starts with the first letter, then the computer gets to add a letter, and each player takes turns to add letters until a word is made. Whoever finishes the word gets the points.
 
 ## Plan
 
@@ -9,12 +9,22 @@ Stack's On! is a game played against the computer. Loser (or computer, if first 
 3. Build functionality for user to enter letters and have those letters checked against the array.
 4. Letters that are used should then create a new array of suitable words from which the computer can then choose it's next letter
 5. Computer logic:
-   - Out of array, pick longest word that matches the beginning that has been entered
-   - If there is more than one longest word (more than one word with the same amount of letters more than all the others), pick which one to use at random and put it into variable
-   - Remove 'start' of word (however many words have already been spelled out)
-   - get first letter of new, chopped word.
-   - enter that into new box
+   I had to change the game logic. Originally I coded the computer to find the longest word it could with the current letters, so it was always finding the hardest word dictating the direction of the word really strongly and wouldn't finish the game until that long word was found. I've updated it to select a word at random from the possibilities (as long as the list of current possibilities is more than 1)
 
-## Issues to solve
+## TO DO
 
-- What happens when a word is created but there is another possiblity if you keep spelling?
+- Create points counter
+- give user number of options left
+- Difficulty setting:
+    - word lengths higher
+    - no hints
+    - no additional words after word has been completed
+- Play again button
+- Get points for shorter word, but steal points if won on longer word
+- Instructions appear at beginning
+
+### Optional TO DO:
+
+- Dictionary meaning
+- Make computer 'think' before attempting a go
+- Instructions float over page before game
