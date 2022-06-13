@@ -13,7 +13,7 @@ Spell Checkers! is a game played against the computer. Loser (or computer, if fi
 
 ## TO DO
 
-- Create points counter
+
 - give user number of options left
 - Difficulty setting:
     - word lengths higher
@@ -23,8 +23,16 @@ Spell Checkers! is a game played against the computer. Loser (or computer, if fi
 - Get points for shorter word, but steal points if won on longer word
 - Instructions appear at beginning
 
+### Bugs to fix
+
+- There's a weird thing happening when the computer wins and the user chooses to play again. Because the computer goes first, it's currently using the takeCompTurn() function to place it's first go on the board and I think that's screwing it up. Must investigate further.
+
 ### Optional TO DO:
 
 - Dictionary meaning
 - Make computer 'think' before attempting a go
 - Instructions float over page before game
+
+## DONE
+
+- Create points counter

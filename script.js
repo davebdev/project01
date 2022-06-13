@@ -11,6 +11,8 @@ let userPoints = 0;
 let compPoints = 0;
 
 const messageDiv = document.getElementById("message");
+const wordDiv = document.getElementById("word");
+const playAgainDiv = document.getElementById("playAgain");
 
 function setGameDifficulty(num) {
   for (word of wordList) {
@@ -20,7 +22,7 @@ function setGameDifficulty(num) {
   }
 }
 
-setGameDifficulty(7);
+setGameDifficulty(9);
 
 function createGameSpace(winner) {
   if (winner === "user") {
@@ -40,6 +42,20 @@ function updatePoints() {
 createGameSpace(winner);
 updatePoints();
 
+function resetGameSpace() {
+  console.log("game reset");
+  letterCounter = 0;
+  gameOver = false;
+  currentPossibilitiesLength = 0;
+  wordDiv.innerHTML = "";
+  messageDiv.innerHTML = "";
+  createGameSpace(winner);
+  playAgainDiv.style.display = "none";
+  document.getElementById("letter-" + letterCounter).focus(); // sets the cursor to be in the user guess box already
+}
+
+document.getElementById("reset").addEventListener("click", resetGameSpace);
+
 function getCurrentWord() {
   letterboxes = document.querySelectorAll(".letterbox"); // regenerate the letterboxes value based on what is currently on the page
   letterboxes.forEach((element) => (currentWord = currentWord + element.value)); // get current word by stringing values of all letterboxes together
@@ -58,6 +74,9 @@ function getCurrentPossibilities() {
     }
   }
   currentPossibilitiesLength = currentPossibilities.length;
+  console.log(
+    "getCurrentPossibilities (length): " + currentPossibilitiesLength
+  );
 }
 
 function createNewUserInput() {
@@ -73,7 +92,7 @@ function createNewUserInput() {
     letterboxes.forEach((element) => element.removeAttribute("autofocus")); // remove autofocus for all other elements
   }
   newUserInput.setAttribute("autofocus", "");
-  document.getElementById("word").appendChild(newUserInput); // append input to div
+  wordDiv.appendChild(newUserInput); // append input to div
 }
 
 function checkGuess(e) {
@@ -122,7 +141,7 @@ function createNewCompInput(letter) {
   newCompInput.id = "letter-" + letterCounter; // give input unique id
   newCompInput.value = letter; // give input value of computer's next letter
   newCompInput.readOnly = true; // make input readonly
-  document.getElementById("word").appendChild(newCompInput); // append input to div
+  wordDiv.appendChild(newCompInput); // append input to div
   letterCounter = letterCounter + 1;
 }
 
@@ -135,8 +154,9 @@ function getCompNextLetter(word, length) {
     computerGuess = "You win, computer!";
     gameOver = true;
     winner = "comp";
-    compPoints = word.length;
+    compPoints = compPoints + word.length;
     updatePoints();
+    playAgainDiv.removeAttribute("style");
     console.log("Comp points: " + compPoints);
   } else {
     console.log("getCompNextLetter: computer doesn't win yet");
@@ -150,15 +170,16 @@ function takeCompTurn() {
   getCompOptions();
   let computerGuess = ""; // declare computer's guess variable
   const compWordsLength = compWords.length; // hold compWord array length in a variable
-  console.log(compWordsLength);
+  console.log("takeCompTurn: " + compWordsLength);
   if (compWordsLength === 0) {
     // if array length is 0, no more matching words for computer
     messageDiv.innerHTML = "<p>You Win!</p>";
     computerGuess = "No more moves for you, computer!";
     gameOver = true;
     winner = "user";
-    userPoints = currentWordLength;
+    userPoints = userPoints + currentWordLength;
     updatePoints();
+    playAgainDiv.removeAttribute("style");
     console.log("User points: " + userPoints);
   } else if (compWordsLength === 1 && compWords[0] === currentWord) {
     messageDiv.innerHTML = "<p>You Win!</p>";
@@ -166,7 +187,8 @@ function takeCompTurn() {
     gameOver = true;
     winner = "user";
     updatePoints();
-    userPoints = currentWordLength;
+    userPoints = userPoints + currentWordLength;
+    playAgainDiv.removeAttribute("style");
     console.log("User points: " + userPoints);
   } else if (compWordsLength === 1 && compWords[0] !== currentWord) {
     // if array length is 1, there is only one option for computer

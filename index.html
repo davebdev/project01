@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Spell Checkers!</title>
+    <title>Spellcheckers</title>
     <link rel="stylesheet" href="style.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -12,14 +12,21 @@
 </head>
 <body>
     <header>
-        <h1>Spell Checkers!</h1>
+        <h1>SPELL<span id="checkers">CHECKERS</span></h1>
     </header>
 <div id="gameSpace">
-    <div id="userPoints"></div>
-    <div id="compPoints"></div>
+    <div id="userPointsDiv">
+        <p>USER</p>
+        <p id="userPoints"></p>
+    </div>
+    <div id="compPointsDiv">
+        <p>COMPUTER</p>
+        <p id="compPoints"></p>
+    </div>
     <div id="message"></div>
         <div id="word">
         </div>
+        <div id="playAgain" style="display: none;"><button id="reset">Play again</button></div>
 </div>
     <script src="word_library.js"></script>
     <script src="script.js"></script>
