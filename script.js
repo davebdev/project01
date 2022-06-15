@@ -184,7 +184,7 @@ function compWins(word) {
 function getCurrentOptions() {
   console.log("function 12 - getCurrentOptions");
   currentOptions.length = 0;
-  const regex = new RegExp("^" + currentWord); // create regex using that value - '^' means any match that starts with
+  const regex = new RegExp("^" + currentWord + "."); // create regex using that value - '^' means any match that starts with
   for (const word of wordList) {
     // for loop running through word list
     if (word.match(regex)) {
@@ -220,11 +220,23 @@ function resetGameSpace() {
   document.getElementById("letter-" + letterCounter).focus(); // sets the cursor to be in the user guess box already
 }
 
+function continueGame() {
+  console.log("function 15 - continueGame");
+  choiceDiv.style.display = "none";
+  takeCompTurn();
+}
+
+function claimPoints() {
+  console.log("function 16 - claimPoints");
+  choiceDiv.style.display = "none";
+  userWins();
+}
+
 // STARTING PAGE FUNCTIONS
 setGameDifficulty(7);
 createGameSpace(winner);
 updatePoints();
 
-document.getElementById("claim").addEventListener("click", userWins);
-document.getElementById("continue").addEventListener("click", takeCompTurn);
+document.getElementById("claim").addEventListener("click", claimPoints);
+document.getElementById("continue").addEventListener("click", continueGame);
 document.getElementById("reset").addEventListener("click", resetGameSpace);

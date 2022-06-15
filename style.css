@@ -50,7 +50,7 @@ input[type=text]:focus {
 
 #gameSpace {
     display: grid;
-    grid-template-rows: 100px 2fr 2fr 1fr;
+    grid-template-rows: 100px 2fr 1fr 1fr 1fr;
     grid-template-columns: 1fr 4fr 1fr;
     justify-items: center;
 }
@@ -83,7 +83,7 @@ input[type=text]:focus {
 }
 
 #playAgain {
-    grid-row: 3 / 4;
+    grid-row: 4 / 5;
     grid-column: 2 / 3;
 }
 
