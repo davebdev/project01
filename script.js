@@ -1,90 +1,64 @@
-// declare arrays used
+// DECLARE ARRAYS USED
 
-const currentPossibilities = []; // create an array for all possible words based on letters so far
-const compWords = []; // create an array for all the longest words the computer has to choose from
-const difficultySetWordList = []; // wordlist of only x length words set in 'setGameDifficulty' function
+const currentOptions = []; // create an array for all possible words based on letters so far
+const gameWordList = []; // wordlist of only x length words set in 'setGameDifficulty' function
 
-// declare variables used
+// DECLARE VARIABLES USED
 
 let letterCounter = 0;
 let currentWord = "";
+let computerGuess = "";
+let currentOptionsLength = 0;
 let letterboxes = document.querySelectorAll(".letterbox");
+let wordMatch = false;
 let gameOver = false; // set state of game
-let winner = "comp";
-let currentPossibilitiesLength = 0;
+let winner = "user";
 let userPoints = 0;
 let compPoints = 0;
 
-// get elements from html
+// GET ELEMENTS FROM DOM
 
 const messageDiv = document.getElementById("message");
 const wordDiv = document.getElementById("word");
 const playAgainDiv = document.getElementById("playAgain");
+const choiceDiv = document.getElementById("choice");
 
-// SET UP / PAGE MANIPULATION FUNCTIONS
+// SET-UP / PAGE-MANIPULATION FUNCTIONS
 
 function setGameDifficulty(num) {
+  console.log("function 1 - setGameDifficulty");
   for (word of wordList) {
     if (word.length <= num) {
-      difficultySetWordList.push(word);
+      gameWordList.push(word);
     }
   }
 }
 
 function createGameSpace(winner) {
+  console.log("function 2 - createGameSpace");
   if (winner === "comp") {
     createNewUserInput();
   } else {
-    takeFirstCompTurn();
+    computerGuess = ""; // clear computer guess
+    const compWordsLength = gameWordList.length; // hold compWord array length in a variable
+    const cwi = Math.floor(Math.random() * compWordsLength);
+    computerGuess = gameWordList[cwi];
+    const compLetter = computerGuess[0];
+    createNewCompInput(compLetter);
     createNewUserInput();
-    document.getElementById("letter-" + letterCounter).focus(); // sets the cursor to be in the user guess box already
   }
 }
 
 function updatePoints() {
+  console.log("function 3 - updatePoints");
   document.getElementById("userPoints").innerHTML = "<p>" + userPoints + "</p>";
   document.getElementById("compPoints").innerHTML = "<p>" + compPoints + "</p>";
 }
 
-function resetGameSpace() {
-  console.log("game reset");
-  letterCounter = 0;
-  currentWord = "";
-  gameOver = false;
-  currentPossibilitiesLength = 0;
-  wordDiv.innerHTML = "";
-  messageDiv.innerHTML = "";
-  createGameSpace(winner);
-  playAgainDiv.style.display = "none";
-  document.getElementById("letter-" + letterCounter).focus(); // sets the cursor to be in the user guess box already
-}
-
 // GAMEPLAY FUNCTIONS
 
-function getCurrentWord() {
-  letterboxes = document.querySelectorAll(".letterbox"); // regenerate the letterboxes value based on what is currently on the page
-  letterboxes.forEach((element) => (currentWord = currentWord + element.value)); // get current word by stringing values of all letterboxes together
-  currentWord = currentWord.toLowerCase(); // change value to lower case
-  console.log("current word:" + currentWord);
-}
-
-function getCurrentPossibilities() {
-  const regex = new RegExp("^" + currentWord); // create regex using that value - '^' means any match that starts with
-  //   console.log(regex); // testing regex
-  for (const word of difficultySetWordList) {
-    // for loop running through word list
-    if (word.match(regex)) {
-      // if regex matches word
-      currentPossibilities.push(word); // add it to 'currentPossibilities' array
-    }
-  }
-  currentPossibilitiesLength = currentPossibilities.length;
-  console.log(
-    "getCurrentPossibilities (length): " + currentPossibilitiesLength
-  );
-}
-
 function createNewUserInput() {
+  console.log("function 4 - createNewUserInput");
   const newUserInput = document.createElement("input");
   newUserInput.type = "text"; // make input type text
   newUserInput.maxLength = 1; // give input max length of 1
@@ -92,7 +66,7 @@ function createNewUserInput() {
   newUserInput.id = "letter-" + letterCounter; // give input unique id
   newUserInput.value = ""; // clear input value
   newUserInput.readOnly = false; // make input not readonly
-  newUserInput.addEventListener("keypress", checkGuess);
+  newUserInput.addEventListener("input", checkGuess);
   if (letterboxes.length > 1) {
     letterboxes.forEach((element) => element.removeAttribute("autofocus")); // remove autofocus for all other elements
   }
@@ -100,49 +74,13 @@ function createNewUserInput() {
   wordDiv.appendChild(newUserInput); // append input to div
 }
 
-function checkGuess(e) {
-  if (e.key === "Enter") {
-    currentPossibilities.length = 0; // empties array
-    currentWord = ""; // clear currentWord so fresh check can be made
-    messageDiv.innerHTML = "";
-    letterboxes = document.querySelectorAll(".letterbox");
-
-    getCurrentWord();
-    getCurrentPossibilities();
-
-    if (currentPossibilities.length === 0) {
-      console.log("Word does not exist");
-      messageDiv.innerHTML = "<p>Word doesn't exist. Try again...</p>";
-      document.getElementById("letter-" + letterCounter).value = "";
-    } else {
-      letterCounter = letterCounter + 1;
-      e.target.setAttribute("readonly", "");
-      takeCompTurn();
-      if (gameOver === false) {
-        createNewUserInput();
-        document.getElementById("letter-" + letterCounter).focus(); // sets the cursor to be in the user guess box already
-      }
-    }
-  }
-  console.log("END OF CHECKGUESS FUNCTION");
-}
-
-function getCompOptions() {
-  compWords.length = 0; // clear compWords array
-  for (const word of currentPossibilities) {
-    // for all words that are longer than current word, push to compWords array
-    if (word.length > currentWord.length) {
-      compWords.push(word);
-    }
-  }
-}
-
 function createNewCompInput(letter) {
+  console.log("function 5 - createNewCompInput");
   const newCompInput = document.createElement("input"); // create new Input tag
   newCompInput.type = "text"; // make input type text
   newCompInput.maxLength = 1; // give input max length of 1
   newCompInput.classList.add("letterbox"); // add 'letterbox' class to input
-  newCompInput.classList.add("comp"); // add 'comp' class to input
+  newCompInput.classList.add("compTurn"); // add 'comp' class to input
   newCompInput.id = "letter-" + letterCounter; // give input unique id
   newCompInput.value = letter; // give input value of computer's next letter
   newCompInput.readOnly = true; // make input readonly
@@ -150,86 +88,143 @@ function createNewCompInput(letter) {
   letterCounter = letterCounter + 1;
 }
 
-function getCompNextLetter(word, length) {
-  let letter = "";
-  letter = word.slice(length, length + 1); // get computer's next letter (first letter of computer's guess after current word so far)
-  console.log("computer next letter:" + letter);
-  if (word.length === length + 1) {
-    messageDiv.innerHTML = "<p>You Lose!</p>";
-    computerGuess = "You win, computer!";
-    gameOver = true;
-    winner = "comp";
-    compPoints = compPoints + word.length;
-    updatePoints();
-    playAgainDiv.removeAttribute("style");
-    console.log("Comp points: " + compPoints);
-  } else {
-    console.log("getCompNextLetter: computer doesn't win yet");
+function checkGuess(e) {
+  if (e.inputType === "insertText" && gameOver === false) {
+    if (e.data.match(/[a-z]/)) {
+      // checking functionality starts here
+      console.log("function 6 - checkGuess");
+      getCurrentWord();
+      if (currentWord.length > 2) {
+        checkCurrentWord();
+      }
+      console.log("Is word a match? ", wordMatch);
+      if (wordMatch === true) {
+        choiceDiv.removeAttribute("style");
+      } else {
+        takeCompTurn();
+      }
+      // checking functionality ends here
+    }
   }
-  return letter;
+}
+
+function getCurrentWord() {
+  console.log("function 7 - getCurrentWord");
+  currentWord = "";
+  letterboxes = document.querySelectorAll(".letterbox"); // regenerate the letterboxes value based on what is currently on the page
+  letterboxes.forEach((element) => (currentWord = currentWord + element.value)); // get current word by stringing values of all letterboxes together
+  currentWord = currentWord.toLowerCase(); // change value to lower case
+  console.log("current word: " + currentWord);
+}
+
+function checkCurrentWord() {
+  console.log("function 8 - checkCurrentWord");
+  wordMatch = false;
+  const regex = new RegExp("^" + currentWord + "$");
+  for (word of wordList) {
+    if (word.match(regex)) {
+      wordMatch = true;
+      break;
+    }
+  }
 }
 
 function takeCompTurn() {
-  const currentWordLength = currentWord.length; // get length of word so far
-  getCurrentPossibilities();
-  getCompOptions();
-  let computerGuess = ""; // declare computer's guess variable
-  const compWordsLength = compWords.length; // hold compWord array length in a variable
-  console.log("takeCompTurn: " + compWordsLength);
-  if (compWordsLength === 0) {
-    // if array length is 0, no more matching words for computer
-    messageDiv.innerHTML = "<p>You Win!</p>";
-    computerGuess = "No more moves for you, computer!";
-    gameOver = true;
-    winner = "user";
-    userPoints = userPoints + currentWordLength;
-    updatePoints();
-    playAgainDiv.removeAttribute("style");
-    console.log("User points: " + userPoints);
-  } else if (compWordsLength === 1 && compWords[0] === currentWord) {
-    messageDiv.innerHTML = "<p>You Win!</p>";
-    computerGuess = "No more moves for you, computer!";
-    gameOver = true;
-    winner = "user";
-    updatePoints();
-    userPoints = userPoints + currentWordLength;
-    playAgainDiv.removeAttribute("style");
-    console.log("User points: " + userPoints);
-  } else if (compWordsLength === 1 && compWords[0] !== currentWord) {
-    // if array length is 1, there is only one option for computer
-    computerGuess = compWords[0];
-    const compNextLetter = getCompNextLetter(computerGuess, currentWordLength);
-    createNewCompInput(compNextLetter);
-  } else if (compWordsLength > 1) {
-    // if array length is more than one, choose an option at random
-    const cwi = Math.floor(Math.random() * compWordsLength);
-    computerGuess = compWords[cwi];
-    const compNextLetter = getCompNextLetter(computerGuess, currentWordLength);
-    createNewCompInput(compNextLetter);
-  } else {
-    // error catching
-    computerGuess = "Error";
-  }
-  console.log("computer guess: " + computerGuess);
-}
-
-function takeFirstCompTurn() {
-  getCurrentPossibilities();
-  getCompOptions();
-  let computerGuess = ""; // declare computer's guess variable
-  const compWordsLength = compWords.length; // hold compWord array length in a variable
-  const cwi = Math.floor(Math.random() * compWordsLength);
-  computerGuess = compWords[cwi];
-  const compLetter = computerGuess[0];
-  console.log(compLetter);
+  console.log("function 9 - takeCompTurn");
+  computerGuess = ""; // clear computer guess variable
+  getCurrentWord();
+  getCurrentOptions();
+  const cwi = Math.floor(Math.random() * currentOptionsLength); // get random number to use as index
+  computerGuess = currentOptions[cwi]; // assign random word from computer choices to computerGuess
+  console.log("Computer guess: ", computerGuess);
+  const compLetter = getCompNextLetter(computerGuess, currentWord.length);
   createNewCompInput(compLetter);
+  getCurrentWord();
+  if (currentWord.length > 3) {
+    checkCurrentWord();
+  }
+  if (wordMatch === true) {
+    compWins(currentWord);
+  } else {
+    if (currentOptionsLength === 0) {
+      userWins();
+    } else {
+      createNewUserInput();
+      document.getElementById("letter-" + letterCounter).focus(); // sets the cursor to be in the user guess box already
+    }
+  }
 }
 
-// Onload Page Actions
+function userWins() {
+  console.log("function 10 - userWins");
+  gameOver = true;
+  winner = "user";
+  letterboxes = document.querySelectorAll(".letterbox");
+  letterboxes.forEach((element) => element.classList.add("userWins")); // add compWins class to each letter
+  messageDiv.innerHTML = "<p>You Win!</p>";
+  userPoints = userPoints + currentWord.length;
+  updatePoints();
+  playAgainDiv.removeAttribute("style");
+  computerGuess = "";
+}
 
+function compWins(word) {
+  console.log("function 11 - compWins");
+  gameOver = true;
+  winner = "comp";
+  letterboxes = document.querySelectorAll(".letterbox");
+  letterboxes.forEach((element) => element.classList.add("compWins")); // add compWins class to each letter
+  messageDiv.innerHTML = "<p>You Lose!</p>";
+  compPoints = compPoints + word.length;
+  updatePoints();
+  playAgainDiv.removeAttribute("style");
+  computerGuess = "";
+}
+
+function getCurrentOptions() {
+  console.log("function 12 - getCurrentOptions");
+  currentOptions.length = 0;
+  const regex = new RegExp("^" + currentWord); // create regex using that value - '^' means any match that starts with
+  for (const word of wordList) {
+    // for loop running through word list
+    if (word.match(regex)) {
+      // if regex matches word
+      currentOptions.push(word); // add it to 'currentOptions' array
+    }
+  }
+  currentOptionsLength = currentOptions.length;
+}
+
+function getCompNextLetter(word, length) {
+  console.log("function 13 - getCompNextLetter");
+  let letter = "";
+  letter = word.slice(length, length + 1); // get computer's next letter (first letter of computer's guess after current word so far)
+  return letter;
+}
+
+function resetGameSpace() {
+  console.log("function 14 - resetGameSpace");
+  wordDiv.innerHTML = "";
+  messageDiv.innerHTML = "";
+  letterCounter = 0;
+  currentWord = "";
+  computerGuess = "";
+  currentOptionsLength = 0;
+  letterboxes = document.querySelectorAll(".letterbox");
+  wordMatch = false;
+  gameOver = false;
+  createGameSpace(winner);
+  //   countWordsLeft();
+  playAgainDiv.style.display = "none";
+  choiceDiv.style.display = "none";
+  document.getElementById("letter-" + letterCounter).focus(); // sets the cursor to be in the user guess box already
+}
+
+// STARTING PAGE FUNCTIONS
 setGameDifficulty(7);
 createGameSpace(winner);
 updatePoints();
 
-document.getElementById("letter-0").addEventListener("keypress", checkGuess);
+document.getElementById("claim").addEventListener("click", userWins);
+document.getElementById("continue").addEventListener("click", takeCompTurn);
 document.getElementById("reset").addEventListener("click", resetGameSpace);

@@ -27,8 +27,21 @@ input[type=text] {
 input[type=text]:focus {
     caret-color: transparent;
 }
-.comp {
+.compTurn {
     background-color: lightgray;
+}
+
+.compWins {
+    border-color: darkred;
+    font: white;
+    background-color: lightcoral;
+}
+
+.userWins {
+    border-color: darkgreen;
+    font: white;
+    background-color: lightgreen;
+
 }
 
 #checkers {
@@ -40,6 +53,13 @@ input[type=text]:focus {
     grid-template-rows: 100px 2fr 2fr 1fr;
     grid-template-columns: 1fr 4fr 1fr;
     justify-items: center;
+}
+
+#wordsLeft {
+    grid-row: 1 / 2;
+    grid-column: 2 / 3;
+    display: flex;
+    justify-content: center;
 }
 
 #message {
@@ -55,6 +75,11 @@ input[type=text]:focus {
     grid-column: 2 / 3;
     display: flex;
     justify-content: space-evenly;
+}
+
+#choice {
+    grid-row: 3 / 4;
+    grid-column: 2 / 3;
 }
 
 #playAgain {

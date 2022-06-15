@@ -19,13 +19,12 @@ Spell Checkers! is a game played against the computer. Loser (or computer, if fi
     - word lengths higher
     - no hints
     - no additional words after word has been completed
-- Play again button
 - Get points for shorter word, but steal points if won on longer word
 - Instructions appear at beginning
 
 ### Bugs to fix
 
-- There's a weird thing happening when the computer wins and the user chooses to play again. Because the computer goes first, it's currently using the takeCompTurn() function to place it's first go on the board and I think that's screwing it up. Must investigate further.
+~~- There's a weird thing happening when the computer wins and the user chooses to play again. Because the computer goes first, it's currently using the takeCompTurn() function to place it's first go on the board and I think that's screwing it up. Must investigate further.~~ - FIXED
 
 ### Optional TO DO:
 
@@ -36,3 +35,4 @@ Spell Checkers! is a game played against the computer. Loser (or computer, if fi
 ## DONE
 
 - Create points counter
+- Play again button
