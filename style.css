@@ -27,6 +27,40 @@ input[type=text] {
 input[type=text]:focus {
     caret-color: transparent;
 }
+
+button {
+    appearance: none;
+    width: 200px;
+    height: 60px;
+    margin: 5px;
+    padding: 5px;
+    background-color: black;
+    color: white;
+    text-transform: uppercase;
+    font-size: 20px;
+    border-radius: 12px;
+    border-style: none;
+    box-shadow: 5px 5px 10px gray;
+}
+
+button:active {
+    box-shadow: 2px 2px 5px gray;
+}
+
+.button-27:disabled {
+  pointer-events: none;
+}
+
+.button-27:hover {
+  box-shadow: rgba(0, 0, 0, 0.25) 0 8px 15px;
+  transform: translateY(-2px);
+}
+
+.button-27:active {
+  box-shadow: none;
+  transform: translateY(0);
+}
+
 .compTurn {
     background-color: lightgray;
 }
@@ -77,13 +111,8 @@ input[type=text]:focus {
     justify-content: space-evenly;
 }
 
-#choice {
+#options {
     grid-row: 3 / 4;
-    grid-column: 2 / 3;
-}
-
-#playAgain {
-    grid-row: 4 / 5;
     grid-column: 2 / 3;
 }
 

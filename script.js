@@ -1,7 +1,7 @@
 // DECLARE ARRAYS USED
 
 const currentOptions = []; // create an array for all possible words based on letters so far
-const gameWordList = []; // wordlist of only x length words set in 'setGameDifficulty' function
+const gameWordList = []; // wordlist of only x length words set in 'setOddsOrEvens' function
 
 // DECLARE VARIABLES USED
 
@@ -12,7 +12,7 @@ let currentOptionsLength = 0;
 let letterboxes = document.querySelectorAll(".letterbox");
 let wordMatch = false;
 let gameOver = false; // set state of game
-let winner = "user";
+let winner = "comp";
 let userPoints = 0;
 let compPoints = 0;
 
@@ -20,18 +20,23 @@ let compPoints = 0;
 
 const messageDiv = document.getElementById("message");
 const wordDiv = document.getElementById("word");
-const playAgainDiv = document.getElementById("playAgain");
-const choiceDiv = document.getElementById("choice");
+const optionsDiv = document.getElementById("wordsLeft");
+const claimButton = document.getElementById("claim");
+const continueButton = document.getElementById("continue");
+const resetButton = document.getElementById("reset");
 
 // SET-UP / PAGE-MANIPULATION FUNCTIONS
 
-function setGameDifficulty(num) {
-  console.log("function 1 - setGameDifficulty");
-  for (word of wordList) {
-    if (word.length <= num) {
-      gameWordList.push(word);
+function setOddsOrEvens(num) {
+  console.log("function 1 - setOddsOrEvens");
+  do {
+    for (let i = 0; i < wordList.length; i++) {
+      if (wordList[i].length === num) {
+        gameWordList.push(wordList[i]);
+      }
     }
-  }
+    num = num + 2;
+  } while (num < 24);
 }
 
 function createGameSpace(winner) {
@@ -90,18 +95,30 @@ function createNewCompInput(letter) {
 
 function checkGuess(e) {
   if (e.inputType === "insertText" && gameOver === false) {
+    messageDiv.innerHTML = "";
     if (e.data.match(/[a-z]/)) {
       // checking functionality starts here
       console.log("function 6 - checkGuess");
       getCurrentWord();
+      wordMatch = false;
       if (currentWord.length > 2) {
         checkCurrentWord();
       }
+      updateCounter();
       console.log("Is word a match? ", wordMatch);
       if (wordMatch === true) {
-        choiceDiv.removeAttribute("style");
+        claimButton.removeAttribute("style");
+        if (currentOptionsLength !== 0) {
+          continueButton.removeAttribute("style");
+        }
+        updateCounter();
       } else {
-        takeCompTurn();
+        updateCounter();
+        if (currentOptionsLength === 0) {
+          messageDiv.innerHTML = "<p>Word does not exist... try again!</p>";
+        } else {
+          takeCompTurn();
+        }
       }
       // checking functionality ends here
     }
@@ -119,11 +136,11 @@ function getCurrentWord() {
 
 function checkCurrentWord() {
   console.log("function 8 - checkCurrentWord");
-  wordMatch = false;
   const regex = new RegExp("^" + currentWord + "$");
   for (word of wordList) {
     if (word.match(regex)) {
       wordMatch = true;
+      console.log("wordMatch: ", wordMatch);
       break;
     }
   }
@@ -140,15 +157,19 @@ function takeCompTurn() {
   const compLetter = getCompNextLetter(computerGuess, currentWord.length);
   createNewCompInput(compLetter);
   getCurrentWord();
+  wordMatch = false;
   if (currentWord.length > 3) {
     checkCurrentWord();
   }
   if (wordMatch === true) {
+    updateCounter();
     compWins(currentWord);
   } else {
     if (currentOptionsLength === 0) {
+      updateCounter();
       userWins();
     } else {
+      updateCounter();
       createNewUserInput();
       document.getElementById("letter-" + letterCounter).focus(); // sets the cursor to be in the user guess box already
     }
@@ -164,7 +185,7 @@ function userWins() {
   messageDiv.innerHTML = "<p>You Win!</p>";
   userPoints = userPoints + currentWord.length;
   updatePoints();
-  playAgainDiv.removeAttribute("style");
+  resetButton.removeAttribute("style");
   computerGuess = "";
 }
 
@@ -177,7 +198,7 @@ function compWins(word) {
   messageDiv.innerHTML = "<p>You Lose!</p>";
   compPoints = compPoints + word.length;
   updatePoints();
-  playAgainDiv.removeAttribute("style");
+  resetButton.removeAttribute("style");
   computerGuess = "";
 }
 
@@ -214,26 +235,34 @@ function resetGameSpace() {
   wordMatch = false;
   gameOver = false;
   createGameSpace(winner);
-  //   countWordsLeft();
-  playAgainDiv.style.display = "none";
-  choiceDiv.style.display = "none";
+  updateCounter();
+  resetButton.style.display = "none";
+  claimButton.style.display = "none";
+  continueButton.style.display = "none";
   document.getElementById("letter-" + letterCounter).focus(); // sets the cursor to be in the user guess box already
 }
 
 function continueGame() {
   console.log("function 15 - continueGame");
-  choiceDiv.style.display = "none";
+  claimButton.style.display = "none";
+  continueButton.style.display = "none";
   takeCompTurn();
 }
 
 function claimPoints() {
   console.log("function 16 - claimPoints");
-  choiceDiv.style.display = "none";
+  claimButton.style.display = "none";
+  continueButton.style.display = "none";
   userWins();
 }
 
+function updateCounter() {
+  getCurrentOptions();
+  optionsDiv.innerHTML = "<p>Options left: " + currentOptionsLength + "</p>";
+}
+
 // STARTING PAGE FUNCTIONS
-setGameDifficulty(7);
+setOddsOrEvens(1);
 createGameSpace(winner);
 updatePoints();
 

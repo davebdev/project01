@@ -13,7 +13,6 @@ Spell Checkers! is a game played against the computer. Loser (or computer, if fi
 
 ## TO DO
 
-
 - give user number of options left
 - Difficulty setting:
     - word lengths higher
