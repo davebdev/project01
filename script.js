@@ -42,8 +42,11 @@ function setOddsOrEvens(num) {
 function createGameSpace(winner) {
   console.log("function 2 - createGameSpace");
   if (winner === "comp") {
+    messageDiv.innerHTML = "";
     createNewUserInput();
+    updatePoints();
   } else {
+    messageDiv.innerHTML = "";
     computerGuess = ""; // clear computer guess
     const compWordsLength = gameWordList.length; // hold compWord array length in a variable
     const cwi = Math.floor(Math.random() * compWordsLength);
@@ -51,6 +54,7 @@ function createGameSpace(winner) {
     const compLetter = computerGuess[0];
     createNewCompInput(compLetter);
     createNewUserInput();
+    updatePoints();
   }
 }
 
@@ -257,14 +261,20 @@ function claimPoints() {
 }
 
 function updateCounter() {
+  console.log("function 17 - updateCounter");
   getCurrentOptions();
   optionsDiv.innerHTML = "<p>Options left: " + currentOptionsLength + "</p>";
 }
 
+function instructions() {
+  console.log("function 18 - instructions");
+  messageDiv.innerHTML =
+    '<h2>How to Play</h2><p><ol><li>Enter the first letter of a word you\'re trying to build</li><li>The computer will then take a turn entering the next letter</li><li>Whoever enters the final letter of the word wins</li></p><button onclick="createGameSpace(winner)">Ok</button>';
+}
+
 // STARTING PAGE FUNCTIONS
 setOddsOrEvens(1);
-createGameSpace(winner);
-updatePoints();
+instructions();
 
 document.getElementById("claim").addEventListener("click", claimPoints);
 document.getElementById("continue").addEventListener("click", continueGame);

@@ -13,12 +13,10 @@ Spell Checkers! is a game played against the computer. Loser (or computer, if fi
 
 ## TO DO
 
-- give user number of options left
 - Difficulty setting:
     - word lengths higher
     - no hints
     - no additional words after word has been completed
-- Get points for shorter word, but steal points if won on longer word
 - Instructions appear at beginning
 
 ### Bugs to fix
@@ -35,3 +33,5 @@ Spell Checkers! is a game played against the computer. Loser (or computer, if fi
 
 - Create points counter
 - Play again button
+- give user number of options left
+- Get points for shorter word, ~~but steal points if won on longer word~~
