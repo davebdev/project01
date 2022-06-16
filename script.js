@@ -18,6 +18,9 @@ let compPoints = 0;
 
 // GET ELEMENTS FROM DOM
 
+const difficultyDiv = document.getElementById("difficulty");
+const userPointsDiv = document.getElementById("userPointsDiv");
+const compPointsDiv = document.getElementById("compPointsDiv");
 const messageDiv = document.getElementById("message");
 const wordDiv = document.getElementById("word");
 const optionsDiv = document.getElementById("wordsLeft");
@@ -45,6 +48,7 @@ function createGameSpace(winner) {
     messageDiv.innerHTML = "";
     createNewUserInput();
     updatePoints();
+    createDifficultySwitch();
   } else {
     messageDiv.innerHTML = "";
     computerGuess = ""; // clear computer guess
@@ -55,13 +59,25 @@ function createGameSpace(winner) {
     createNewCompInput(compLetter);
     createNewUserInput();
     updatePoints();
+    createDifficultySwitch();
   }
 }
 
 function updatePoints() {
   console.log("function 3 - updatePoints");
-  document.getElementById("userPoints").innerHTML = "<p>" + userPoints + "</p>";
-  document.getElementById("compPoints").innerHTML = "<p>" + compPoints + "</p>";
+  userPointsDiv.innerHTML = "";
+  compPointsDiv.innerHTML = "";
+  const userPointsTitle = createDomElement("p", "USER");
+  const userPointsDisplay = createDomElement("p", userPoints);
+
+  const compPointsTitle = createDomElement("p", "COMPUTER");
+  const compPointsDisplay = createDomElement("p", compPoints);
+
+  userPointsDiv.appendChild(userPointsTitle);
+  userPointsDiv.appendChild(userPointsDisplay);
+
+  compPointsDiv.appendChild(compPointsTitle);
+  compPointsDiv.appendChild(compPointsDisplay);
 }
 
 // GAMEPLAY FUNCTIONS
@@ -268,8 +284,65 @@ function updateCounter() {
 
 function instructions() {
   console.log("function 18 - instructions");
-  messageDiv.innerHTML =
-    '<h2>How to Play</h2><p><ol><li>Enter the first letter of a word you\'re trying to build</li><li>The computer will then take a turn entering the next letter</li><li>Whoever enters the final letter of the word wins</li></p><button onclick="createGameSpace(winner)">Ok</button>';
+  messageDiv.innerHTML = "";
+
+  const instructionsTitle = createDomElement("h2", "How to Play");
+  const instructionsList = createDomElement("ol", "");
+  const instruction1 = createDomElement(
+    "li",
+    "Enter the first letter of a word you're trying to build"
+  );
+  const instruction2 = createDomElement(
+    "li",
+    "The computer will then take a turn entering the next letter"
+  );
+  const instruction3 = createDomElement(
+    "li",
+    "Whichever player enters the final letter of the word wins the points"
+  );
+  const okButtonP = createDomElement("p", "");
+  const okButton = createDomElement("button", "OK");
+  okButton.addEventListener("click", createGameSpace);
+  okButtonP.appendChild(okButton);
+  instructionsList.appendChild(instruction1);
+  instructionsList.appendChild(instruction2);
+  instructionsList.appendChild(instruction3);
+  messageDiv.appendChild(instructionsTitle);
+  messageDiv.appendChild(instructionsList);
+  messageDiv.appendChild(okButtonP);
+}
+
+function createDomElement(el, text) {
+  console.log("function 19 - createDomElement");
+  const element = document.createElement(el);
+  element.textContent = text;
+  return element;
+}
+
+function createDifficultySwitch() {
+  const switchInput = document.createElement("input");
+  switchInput.type = "checkbox";
+  switchInput.id = "hardmode";
+  switchInput.addEventListener("click", toggleHardMode);
+  const switchSpan = document.createElement("span");
+  switchSpan.classList.add("slider", "round");
+  const switchLabel = document.createElement("label");
+  switchLabel.classList.add("switch");
+  switchLabel.appendChild(switchInput);
+  switchLabel.appendChild(switchSpan);
+  difficultyDiv.appendChild(switchLabel);
+  const difficultyLabel = createDomElement("p", "HARD MODE");
+  difficultyLabel.id = "difficultyLabel";
+  difficultyDiv.appendChild(difficultyLabel);
+}
+
+function toggleHardMode() {
+  const hardMode = document.getElementById("hardmode").checked;
+  if (hardMode === true) {
+    console.log("Hard Mode ON");
+  } else {
+    console.log("Hard Mode OFF");
+  }
 }
 
 // STARTING PAGE FUNCTIONS
