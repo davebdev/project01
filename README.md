@@ -12,8 +12,8 @@ Spell Checkers! is a game played against the computer. Loser (or computer, if fi
    I had to change the game logic. Origin ally I coded the computer to find the longest word it could with the current letters, so it was always finding the hardest word dictating the direction of the word really strongly and wouldn't finish the game until that long word was found. I've updated it to select a word at random from the possibilities (as long as the list of current possibilities is more than 1)
 
 ## TO DO
+NONE!
 
-- First to 'x' number of points wins
 
 ### Bugs to fix
 
@@ -36,3 +36,4 @@ Spell Checkers! is a game played against the computer. Loser (or computer, if fi
 - Difficulty setting:
     - three strikes system for letter guessing
     - no hints
+- First to 'x' number of points wins

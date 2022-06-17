@@ -14,10 +14,19 @@ let strikes = document.querySelectorAll(".strike");
 let wordMatch = false;
 let gameOver = false; // set state of game
 let winner = "comp";
+let winnerTotal = "";
 let userPoints = 0;
 let compPoints = 0;
 let hardModeOn = false;
 let strikeCount = 0;
+let numPointsToWin = 20;
+
+// LOCAL STORAGE USED TO STORE NUMBER OF GAMES WON
+
+localStorage.setItem("userGamesWon", 0);
+localStorage.setItem("compGamesWon", 0);
+
+const compGamesWon = localStorage.getItem("compGamesWon");
 
 // GET ELEMENTS FROM DOM
 
@@ -29,7 +38,8 @@ const wordDiv = document.getElementById("word");
 const optionsDiv = document.getElementById("wordsLeft");
 const claimButton = document.getElementById("claim");
 const continueButton = document.getElementById("continue");
-const resetButton = document.getElementById("reset");
+const playAgainButton = document.getElementById("playAgain");
+const newGameButton = document.getElementById("refresh");
 
 // SET-UP / PAGE-MANIPULATION FUNCTIONS
 
@@ -74,10 +84,14 @@ function updatePoints() {
   console.log("function 3 - updatePoints");
   userPointsDiv.innerHTML = "";
   compPointsDiv.innerHTML = "";
-  const userPointsTitle = createDomElement("p", "textContent", "USER");
+  const userPointsTitle = createDomElement("p", "innerHTML", "USER<br>POINTS");
   const userPointsDisplay = createDomElement("p", "textContent", userPoints);
 
-  const compPointsTitle = createDomElement("p", "textContent", "COMPUTER");
+  const compPointsTitle = createDomElement(
+    "p",
+    "innerHTML",
+    "COMPUTER<br>POINTS"
+  );
   const compPointsDisplay = createDomElement("p", "textContent", compPoints);
 
   userPointsDiv.appendChild(userPointsTitle);
@@ -234,26 +248,46 @@ function userWins() {
   console.log("function 10 - userWins");
   gameOver = true;
   winner = "user";
-  letterboxes = document.querySelectorAll(".letterbox");
-  letterboxes.forEach((element) => element.classList.add("userWins")); // add compWins class to each letter
-  messageDiv.innerHTML = "<p>You Win!</p>";
   userPoints = userPoints + currentWord.length;
-  updatePoints();
-  resetButton.removeAttribute("style");
-  computerGuess = "";
+  checkTotalScore(winner);
+  if (winnerTotal === "user") {
+    messageDiv.innerHTML = "<p>Congratulations, you've won the game!</p>";
+    wordDiv.innerHTML = "";
+    optionsDiv.innerHTML = "";
+    updateScoreboard();
+    updatePoints();
+    newGameButton.removeAttribute("style");
+  } else {
+    letterboxes = document.querySelectorAll(".letterbox");
+    letterboxes.forEach((element) => element.classList.add("userWins")); // add compWins class to each letter
+    messageDiv.innerHTML = "<p>You Win!</p>";
+    updatePoints();
+    playAgainButton.removeAttribute("style");
+    computerGuess = "";
+  }
 }
 
 function compWins(word) {
   console.log("function 11 - compWins");
   gameOver = true;
   winner = "comp";
-  letterboxes = document.querySelectorAll(".letterbox");
-  letterboxes.forEach((element) => element.classList.add("compWins")); // add compWins class to each letter
-  messageDiv.innerHTML = "<p>You Lose!</p>";
   compPoints = compPoints + word.length;
-  updatePoints();
-  resetButton.removeAttribute("style");
-  computerGuess = "";
+  checkTotalScore(winner);
+  if (winnerTotal === "comp") {
+    messageDiv.innerHTML = "<p>Aww too bad! You've lost the game :(</p>";
+    wordDiv.innerHTML = "";
+    optionsDiv.innerHTML = "";
+    updateScoreboard();
+    updatePoints();
+    newGameButton.removeAttribute("style");
+  } else {
+    letterboxes = document.querySelectorAll(".letterbox");
+    letterboxes.forEach((element) => element.classList.add("compWins")); // add compWins class to each letter
+    messageDiv.innerHTML = "<p>You Lose!</p>";
+    updatePoints();
+    playAgainButton.removeAttribute("style");
+    computerGuess = "";
+  }
 }
 
 function getCurrentOptions() {
@@ -290,7 +324,7 @@ function resetGameSpace() {
   gameOver = false;
   createGameSpace(winner);
   updateCounter();
-  resetButton.style.display = "none";
+  playAgainButton.style.display = "none";
   claimButton.style.display = "none";
   continueButton.style.display = "none";
 }
@@ -329,6 +363,12 @@ function instructions() {
     "textContent",
     "How to Play"
   );
+  const firstToXDiv = createDomElement("div", "id", "firstToX");
+  const firstToXP = createDomElement(
+    "p",
+    "innerHTML",
+    'First player to <select name="pointsToWin" id="pointsToWin"><option value="20">20</option><option value="50">50</option><option value="100">100</option><option value="200">200</option></select> points, wins!'
+  );
   const instructionsList = createDomElement("ol", "textContent", "");
   const instruction1 = createDomElement(
     "li",
@@ -352,13 +392,15 @@ function instructions() {
   );
   const okButtonP = createDomElement("p", "textContent", "");
   const okButton = createDomElement("button", "textContent", "OK");
-  okButton.addEventListener("click", createGameSpace);
+  okButton.addEventListener("click", startGame);
   okButtonP.appendChild(okButton);
   instructionsList.appendChild(instruction1);
   instructionsList.appendChild(instruction2);
   instructionsList.appendChild(instruction3);
+  firstToXDiv.appendChild(firstToXP);
   messageDiv.appendChild(instructionsTitle);
   messageDiv.appendChild(instructionsList);
+  messageDiv.appendChild(firstToXDiv);
   messageDiv.appendChild(hardModeInstruction);
   messageDiv.appendChild(okButtonP);
 }
@@ -455,10 +497,55 @@ function createThreeStrikes() {
   difficultyDiv.appendChild(threeStrikesP);
 }
 
+function updateScoreboard() {
+  console.log("function 23 - updateScoreboard");
+  const userGamesWon = localStorage.getItem("userGamesWon");
+  const compGamesWon = localStorage.getItem("compGamesWon");
+  document.getElementById("usersWins").textContent = userGamesWon;
+  document.getElementById("compsWins").textContent = compGamesWon;
+}
+
+function startGame() {
+  console.log("function 24 - startGame");
+  numPointsToWin = document.getElementById("pointsToWin").value;
+  console.log(numPointsToWin);
+  const numPointsToWinStr = "Number of points to win: " + numPointsToWin;
+  const pointsToWinP = createDomElement("p", "textContent", numPointsToWinStr);
+  document.getElementById("scoreboard").appendChild(pointsToWinP);
+  createGameSpace();
+}
+
+function checkTotalScore(winner) {
+  console.log("function 25 - checkTotalScore");
+  if (winner === "user" && userPoints >= numPointsToWin) {
+    console.log("winner: " + winner);
+    winnerTotal = "user";
+    console.log("total winner: " + winnerTotal);
+    const userGamesWon = localStorage.getItem("userGamesWon");
+    const newUserGamesWon = Number(userGamesWon) + 1;
+    console.log("games won: " + newUserGamesWon);
+    localStorage.setItem("userGamesWon", newUserGamesWon);
+  } else if (winner === "comp" && compPoints >= numPointsToWin) {
+    console.log("winner: " + winner);
+    winnerTotal = "comp";
+    console.log("total winner: " + winnerTotal);
+    const compGamesWon = localStorage.getItem("compGamesWon");
+    const newCompGamesWon = Number(compGamesWon) + 1;
+    console.log("games won: " + newCompGamesWon);
+    localStorage.setItem("compGamesWon", newCompGamesWon);
+  }
+}
+
+function refreshPage() {
+  location.reload();
+}
+
 // STARTING PAGE FUNCTIONS
 // setOddsOrEvens(0);
 instructions();
+updateScoreboard();
 
 document.getElementById("claim").addEventListener("click", claimPoints);
 document.getElementById("continue").addEventListener("click", continueGame);
-document.getElementById("reset").addEventListener("click", resetGameSpace);
+document.getElementById("playAgain").addEventListener("click", resetGameSpace);
+document.getElementById("refresh").addEventListener("click", refreshPage);
