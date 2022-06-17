@@ -23,10 +23,8 @@ let numPointsToWin = 20;
 
 // LOCAL STORAGE USED TO STORE NUMBER OF GAMES WON
 
-localStorage.setItem("userGamesWon", 0);
-localStorage.setItem("compGamesWon", 0);
-
-const compGamesWon = localStorage.getItem("compGamesWon");
+// localStorage.setItem("userGamesWon", 0);
+// localStorage.setItem("compGamesWon", 0);
 
 // GET ELEMENTS FROM DOM
 
@@ -252,7 +250,9 @@ function userWins() {
   checkTotalScore(winner);
   if (winnerTotal === "user") {
     messageDiv.innerHTML = "<p>Congratulations, you've won the game!</p>";
-    wordDiv.innerHTML = "";
+    letterboxes = document.querySelectorAll(".letterbox");
+    letterboxes.forEach((element) => element.classList.add("userWins")); // add compWins class to each letter
+    letterboxes.forEach((element) => element.setAttribute("readonly", ""));
     optionsDiv.innerHTML = "";
     updateScoreboard();
     updatePoints();
@@ -260,6 +260,7 @@ function userWins() {
   } else {
     letterboxes = document.querySelectorAll(".letterbox");
     letterboxes.forEach((element) => element.classList.add("userWins")); // add compWins class to each letter
+    letterboxes.forEach((element) => element.setAttribute("readonly", ""));
     messageDiv.innerHTML = "<p>You Win!</p>";
     updatePoints();
     playAgainButton.removeAttribute("style");
@@ -275,7 +276,9 @@ function compWins(word) {
   checkTotalScore(winner);
   if (winnerTotal === "comp") {
     messageDiv.innerHTML = "<p>Aww too bad! You've lost the game :(</p>";
-    wordDiv.innerHTML = "";
+    letterboxes = document.querySelectorAll(".letterbox");
+    letterboxes.forEach((element) => element.classList.add("compWins")); // add compWins class to each letter
+    letterboxes.forEach((element) => element.setAttribute("readonly", ""));
     optionsDiv.innerHTML = "";
     updateScoreboard();
     updatePoints();
@@ -283,6 +286,7 @@ function compWins(word) {
   } else {
     letterboxes = document.querySelectorAll(".letterbox");
     letterboxes.forEach((element) => element.classList.add("compWins")); // add compWins class to each letter
+    letterboxes.forEach((element) => element.setAttribute("readonly", ""));
     messageDiv.innerHTML = "<p>You Lose!</p>";
     updatePoints();
     playAgainButton.removeAttribute("style");
@@ -501,8 +505,12 @@ function updateScoreboard() {
   console.log("function 23 - updateScoreboard");
   const userGamesWon = localStorage.getItem("userGamesWon");
   const compGamesWon = localStorage.getItem("compGamesWon");
-  document.getElementById("usersWins").textContent = userGamesWon;
-  document.getElementById("compsWins").textContent = compGamesWon;
+  if (userGamesWon !== null) {
+    document.getElementById("usersWins").textContent = userGamesWon;
+  }
+  if (compGamesWon !== null) {
+    document.getElementById("compsWins").textContent = compGamesWon;
+  }
 }
 
 function startGame() {
