@@ -320,6 +320,7 @@ function createDomElement(el, text) {
 }
 
 function createDifficultySwitch() {
+  difficultyDiv.innerHTML = "";
   const switchInput = document.createElement("input");
   switchInput.type = "checkbox";
   switchInput.id = "hardmode";

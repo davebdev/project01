@@ -9,7 +9,7 @@ Spell Checkers! is a game played against the computer. Loser (or computer, if fi
 3. Build functionality for user to enter letters and have those letters checked against the array.
 4. Letters that are used should then create a new array of suitable words from which the computer can then choose it's next letter
 5. Computer logic:
-   I had to change the game logic. Originally I coded the computer to find the longest word it could with the current letters, so it was always finding the hardest word dictating the direction of the word really strongly and wouldn't finish the game until that long word was found. I've updated it to select a word at random from the possibilities (as long as the list of current possibilities is more than 1)
+   I had to change the game logic. Origin ally I coded the computer to find the longest word it could with the current letters, so it was always finding the hardest word dictating the direction of the word really strongly and wouldn't finish the game until that long word was found. I've updated it to select a word at random from the possibilities (as long as the list of current possibilities is more than 1)
 
 ## TO DO
 
@@ -17,7 +17,7 @@ Spell Checkers! is a game played against the computer. Loser (or computer, if fi
     - word lengths higher
     - no hints
     - no additional words after word has been completed
-- Instructions appear at beginning
+- First to 'x' number of points wins
 
 ### Bugs to fix
 
@@ -35,3 +35,4 @@ Spell Checkers! is a game played against the computer. Loser (or computer, if fi
 - Play again button
 - give user number of options left
 - Get points for shorter word, ~~but steal points if won on longer word~~
+- Instructions appear at beginning
