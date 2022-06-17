@@ -13,10 +13,6 @@ Spell Checkers! is a game played against the computer. Loser (or computer, if fi
 
 ## TO DO
 
-- Difficulty setting:
-    - word lengths higher
-    - no hints
-    - no additional words after word has been completed
 - First to 'x' number of points wins
 
 ### Bugs to fix
@@ -25,9 +21,10 @@ Spell Checkers! is a game played against the computer. Loser (or computer, if fi
 
 ### Optional TO DO:
 
-- Dictionary meaning
+- Dictionary meaning [https://dictionaryapi.dev/](https://dictionaryapi.dev/)
 - Make computer 'think' before attempting a go
 - Instructions float over page before game
+- Row shakes when
 
 ## DONE
 
@@ -36,3 +33,6 @@ Spell Checkers! is a game played against the computer. Loser (or computer, if fi
 - give user number of options left
 - Get points for shorter word, ~~but steal points if won on longer word~~
 - Instructions appear at beginning
+- Difficulty setting:
+    - three strikes system for letter guessing
+    - no hints

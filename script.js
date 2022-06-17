@@ -1,7 +1,7 @@
 // DECLARE ARRAYS USED
 
 const currentOptions = []; // create an array for all possible words based on letters so far
-const gameWordList = []; // wordlist of only x length words set in 'setOddsOrEvens' function
+// const gameWordList = []; // wordlist of only x length words set in 'setOddsOrEvens' function
 
 // DECLARE VARIABLES USED
 
@@ -10,11 +10,14 @@ let currentWord = "";
 let computerGuess = "";
 let currentOptionsLength = 0;
 let letterboxes = document.querySelectorAll(".letterbox");
+let strikes = document.querySelectorAll(".strike");
 let wordMatch = false;
 let gameOver = false; // set state of game
 let winner = "comp";
 let userPoints = 0;
 let compPoints = 0;
+let hardModeOn = false;
+let strikeCount = 0;
 
 // GET ELEMENTS FROM DOM
 
@@ -30,36 +33,40 @@ const resetButton = document.getElementById("reset");
 
 // SET-UP / PAGE-MANIPULATION FUNCTIONS
 
-function setOddsOrEvens(num) {
-  console.log("function 1 - setOddsOrEvens");
-  do {
-    for (let i = 0; i < wordList.length; i++) {
-      if (wordList[i].length === num) {
-        gameWordList.push(wordList[i]);
-      }
-    }
-    num = num + 2;
-  } while (num < 24);
-}
+// function setOddsOrEvens(num) {
+//   console.log("function 1 - setOddsOrEvens");
+//   do {
+//     for (let i = 0; i < wordList.length; i++) {
+//       if (wordList[i].length === num) {
+//         gameWordList.push(wordList[i]);
+//       }
+//     }
+//     num = num + 2;
+//   } while (num < 24);
+// }
 
 function createGameSpace(winner) {
   console.log("function 2 - createGameSpace");
   if (winner === "comp") {
     messageDiv.innerHTML = "";
     createNewUserInput();
+    document.getElementById("letter-" + letterCounter).focus(); // sets the cursor to be in the user guess box already
     updatePoints();
     createDifficultySwitch();
+    letterCounter = letterCounter + 1;
   } else {
     messageDiv.innerHTML = "";
     computerGuess = ""; // clear computer guess
-    const compWordsLength = gameWordList.length; // hold compWord array length in a variable
+    const compWordsLength = wordList.length; // hold compWord array length in a variable
     const cwi = Math.floor(Math.random() * compWordsLength);
-    computerGuess = gameWordList[cwi];
+    computerGuess = wordList[cwi];
     const compLetter = computerGuess[0];
     createNewCompInput(compLetter);
     createNewUserInput();
+    document.getElementById("letter-" + letterCounter).focus(); // sets the cursor to be in the user guess box already
     updatePoints();
     createDifficultySwitch();
+    letterCounter = letterCounter + 1;
   }
 }
 
@@ -67,11 +74,11 @@ function updatePoints() {
   console.log("function 3 - updatePoints");
   userPointsDiv.innerHTML = "";
   compPointsDiv.innerHTML = "";
-  const userPointsTitle = createDomElement("p", "USER");
-  const userPointsDisplay = createDomElement("p", userPoints);
+  const userPointsTitle = createDomElement("p", "textContent", "USER");
+  const userPointsDisplay = createDomElement("p", "textContent", userPoints);
 
-  const compPointsTitle = createDomElement("p", "COMPUTER");
-  const compPointsDisplay = createDomElement("p", compPoints);
+  const compPointsTitle = createDomElement("p", "textContent", "COMPUTER");
+  const compPointsDisplay = createDomElement("p", "textContent", compPoints);
 
   userPointsDiv.appendChild(userPointsTitle);
   userPointsDiv.appendChild(userPointsDisplay);
@@ -134,7 +141,23 @@ function checkGuess(e) {
       } else {
         updateCounter();
         if (currentOptionsLength === 0) {
-          messageDiv.innerHTML = "<p>Word does not exist... try again!</p>";
+          if (hardModeOn === true && strikeCount >= 2) {
+            strikeCount = strikeCount + 1;
+            document.getElementById("strike3").classList.add("strikeOn");
+            compWins(currentWord);
+          } else if (hardModeOn === true && strikeCount === 1) {
+            strikeCount = 2;
+            document.getElementById("strike2").classList.add("strikeOn");
+            messageDiv.innerHTML =
+              "<p>Word does not exist... one more strike and you lose!</p>";
+          } else if (hardModeOn === true && strikeCount === 0) {
+            strikeCount = 1;
+            document.getElementById("strike1").classList.add("strikeOn");
+            messageDiv.innerHTML =
+              "<p>Word does not exist... first strike!</p>";
+          } else {
+            messageDiv.innerHTML = "<p>Word does not exist... try again!</p>";
+          }
         } else {
           takeCompTurn();
         }
@@ -147,6 +170,9 @@ function checkGuess(e) {
     claimButton.style.display = "none";
     continueButton.style.display = "none";
     messageDiv.innerHTML = "";
+    getCurrentWord();
+    getCurrentOptions();
+    updateCounter();
   } else {
     consolelog(e.inputType);
   }
@@ -164,7 +190,7 @@ function getCurrentWord() {
 function checkCurrentWord() {
   console.log("function 8 - checkCurrentWord");
   const regex = new RegExp("^" + currentWord + "$");
-  for (word of wordList) {
+  for (const word of wordList) {
     if (word.match(regex)) {
       wordMatch = true;
       console.log("wordMatch: ", wordMatch);
@@ -199,6 +225,7 @@ function takeCompTurn() {
       updateCounter();
       createNewUserInput();
       document.getElementById("letter-" + letterCounter).focus(); // sets the cursor to be in the user guess box already
+      letterCounter = letterCounter + 1;
     }
   }
 }
@@ -266,7 +293,6 @@ function resetGameSpace() {
   resetButton.style.display = "none";
   claimButton.style.display = "none";
   continueButton.style.display = "none";
-  document.getElementById("letter-" + letterCounter).focus(); // sets the cursor to be in the user guess box already
 }
 
 function continueGame() {
@@ -285,30 +311,47 @@ function claimPoints() {
 
 function updateCounter() {
   console.log("function 17 - updateCounter");
+  optionsDiv.innerHTML = "";
   getCurrentOptions();
-  optionsDiv.innerHTML = "<p>Options left: " + currentOptionsLength + "</p>";
+  const hardMode = document.getElementById("hardmode").checked;
+  if (hardMode === false) {
+    optionsDiv.innerHTML =
+      "<p>Possible words left: " + currentOptionsLength + "</p>";
+  }
 }
 
 function instructions() {
   console.log("function 18 - instructions");
   messageDiv.innerHTML = "";
 
-  const instructionsTitle = createDomElement("h2", "How to Play");
-  const instructionsList = createDomElement("ol", "");
+  const instructionsTitle = createDomElement(
+    "h2",
+    "textContent",
+    "How to Play"
+  );
+  const instructionsList = createDomElement("ol", "textContent", "");
   const instruction1 = createDomElement(
     "li",
+    "textContent",
     "Enter the first letter of a word you're trying to build"
   );
   const instruction2 = createDomElement(
     "li",
+    "textContent",
     "The computer will then take a turn entering the next letter"
   );
   const instruction3 = createDomElement(
     "li",
+    "textContent",
     "Whichever player enters the final letter of the word wins the points"
   );
-  const okButtonP = createDomElement("p", "");
-  const okButton = createDomElement("button", "OK");
+  const hardModeInstruction = createDomElement(
+    "p",
+    "innerHTML",
+    "<strong>Hard Mode:</strong> with this switched on, the user gets 3 attempts at a wild guess if they don't know any possible words. After 3 failed attempts, the computer wins.<br>Hard Mode also hides the number of possible words left."
+  );
+  const okButtonP = createDomElement("p", "textContent", "");
+  const okButton = createDomElement("button", "textContent", "OK");
   okButton.addEventListener("click", createGameSpace);
   okButtonP.appendChild(okButton);
   instructionsList.appendChild(instruction1);
@@ -316,21 +359,26 @@ function instructions() {
   instructionsList.appendChild(instruction3);
   messageDiv.appendChild(instructionsTitle);
   messageDiv.appendChild(instructionsList);
+  messageDiv.appendChild(hardModeInstruction);
   messageDiv.appendChild(okButtonP);
 }
 
-function createDomElement(el, text) {
+function createDomElement(el, attribute, text) {
   console.log("function 19 - createDomElement");
   const element = document.createElement(el);
-  element.textContent = text;
+  element[attribute] = text;
   return element;
 }
 
 function createDifficultySwitch() {
+  console.log("function 20 - createDifficultySwitch");
   difficultyDiv.innerHTML = "";
   const switchInput = document.createElement("input");
   switchInput.type = "checkbox";
   switchInput.id = "hardmode";
+  if (hardModeOn === true) {
+    switchInput.checked = true;
+  }
   switchInput.addEventListener("click", toggleHardMode);
   const switchSpan = document.createElement("span");
   switchSpan.classList.add("slider", "round");
@@ -339,22 +387,76 @@ function createDifficultySwitch() {
   switchLabel.appendChild(switchInput);
   switchLabel.appendChild(switchSpan);
   difficultyDiv.appendChild(switchLabel);
-  const difficultyLabel = createDomElement("p", "HARD MODE");
+  const difficultyLabel = createDomElement(
+    "p",
+    "textContent",
+    "HARD MODE: OFF"
+  );
   difficultyLabel.id = "difficultyLabel";
   difficultyDiv.appendChild(difficultyLabel);
+  createThreeStrikes();
 }
 
 function toggleHardMode() {
+  console.log("function 21 - toggleHardMode");
   const hardMode = document.getElementById("hardmode").checked;
   if (hardMode === true) {
+    hardModeOn = true;
+    document.getElementById("difficultyLabel").style.fontWeight = 600;
+    document.getElementById("difficultyLabel").style.color = "#2C3B69";
+    document.getElementById("difficultyLabel").textContent = "HARD MODE: ON";
+    updateCounter();
+    document.getElementById("threeStrikesP").style.display = "block";
     console.log("Hard Mode ON");
+    document.getElementById("letter-" + (letterCounter - 1)).focus();
   } else {
+    hardModeOn = false;
+    document.getElementById("difficultyLabel").style.fontWeight = 300;
+    document.getElementById("difficultyLabel").style.color = "gray";
+    document.getElementById("difficultyLabel").textContent = "HARD MODE: OFF";
+    updateCounter();
+    document.getElementById("threeStrikesP").style.display = "none";
     console.log("Hard Mode OFF");
+    document.getElementById("letter-" + (letterCounter - 1)).focus();
   }
 }
 
+function createThreeStrikes() {
+  console.log("function 22 - threeStrikes");
+  const threeStrikesP = createDomElement("p", "textContent", "");
+  const strike1 = createDomElement("span", "textContent", "x");
+  const strike2 = createDomElement("span", "textContent", "x");
+  const strike3 = createDomElement("span", "textContent", "x");
+  strike1.id = "strike1";
+  strike2.id = "strike2";
+  strike3.id = "strike3";
+  strike1.classList.add("strike");
+  strike2.classList.add("strike");
+  strike3.classList.add("strike");
+  if (strikeCount > 2) {
+    strike1.classList.add("strikeOn");
+    strike2.classList.add("strikeOn");
+    strike3.classList.add("strikeOn");
+  } else if (strikeCount === 2) {
+    strike1.classList.add("strikeOn");
+    strike2.classList.add("strikeOn");
+  } else if (strikeCount === 1) {
+    strike1.classList.add("strikeOn");
+  }
+  threeStrikesP.id = "threeStrikesP";
+  if (hardModeOn === false) {
+    threeStrikesP.style.display = "none";
+  } else {
+    threeStrikesP.style.display = "block";
+  }
+  threeStrikesP.appendChild(strike1);
+  threeStrikesP.appendChild(strike2);
+  threeStrikesP.appendChild(strike3);
+  difficultyDiv.appendChild(threeStrikesP);
+}
+
 // STARTING PAGE FUNCTIONS
-setOddsOrEvens(1);
+// setOddsOrEvens(0);
 instructions();
 
 document.getElementById("claim").addEventListener("click", claimPoints);

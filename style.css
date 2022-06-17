@@ -34,6 +34,13 @@ input[type=text] {
 
 input[type=text]:focus {
     caret-color: transparent;
+    outline: none;
+    border: 2px solid blue;
+}
+
+#compWins:focus {
+    outline: none;
+    border: 2px solid black;
 }
 
 button {
@@ -130,6 +137,11 @@ border-radius: 50%;
 
 /* W3SCHOOLS TUTORIAL END */
 
+#difficultyLabel {
+    -webkit-transition: .4s;
+    transition: .4s;
+}
+
 .compTurn {
     background-color: lightgray;
 }
@@ -145,6 +157,11 @@ border-radius: 50%;
     font: white;
     background-color: lightgreen;
 
+}
+
+#pointsToWin {
+    grid-column: 1 / 2;
+    justify-self: center;
 }
 
 #checkers {
@@ -166,14 +183,28 @@ border-radius: 50%;
     color: gray;
 }
 
+#threeStrikesP > span {
+    padding: 5px;
+    margin: 5px;
+    font-size: 36px;
+}
+
+.strikeOn {
+    color: #2C3B69;
+    font-weight: 600;
+}
+
 #wordsLeft {
+    margin: 10px 0;
     grid-row: 1 / 2;
     grid-column: 2 / 3;
     display: flex;
     justify-content: center;
+    align-self: start;
 }
 
 #message {
+    margin: 10px 0;
     grid-row: 1 / 2;
     grid-column: 2 / 3;
     display: flex;
