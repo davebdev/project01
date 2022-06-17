@@ -115,7 +115,6 @@ function createNewCompInput(letter) {
 
 function checkGuess(e) {
   if (e.inputType === "insertText" && gameOver === false) {
-    messageDiv.innerHTML = "";
     if (e.data.match(/[a-z]/)) {
       // checking functionality starts here
       console.log("function 6 - checkGuess");
@@ -141,7 +140,15 @@ function checkGuess(e) {
         }
       }
       // checking functionality ends here
+    } else {
+      messageDiv.innerHTML = "<p>Please enter a valid letter</p>";
     }
+  } else if (e.inputType === "deleteContentBackward") {
+    claimButton.style.display = "none";
+    continueButton.style.display = "none";
+    messageDiv.innerHTML = "";
+  } else {
+    consolelog(e.inputType);
   }
 }
 
