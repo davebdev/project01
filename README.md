@@ -2,6 +2,10 @@
 
 Spell Checkers! is a game played against the computer. Loser (or computer, if first go) starts with the first letter, then the computer gets to add a letter, and each player takes turns to add letters until a word is made. Whoever finishes the word gets the points.
 
+## HARD MODE
+
+There is a switch in the top left corner which turns on Hard Mode. In Hard Mode, the user gets three opportunities to enter a letter that, based on possibilities of all current letters so far, is not leading to a valid word. Once those three strikes are counted, the computer wins. This count will persist until the end of the game, so if the user makes a mistake again, the computer instantly wins.
+
 ## Plan
 
 1. Create basic html set up, with css and js files pointing to main page, along with any basic css styling to make set up readable.
@@ -25,6 +29,7 @@ NONE!
 - Make computer 'think' before attempting a go
 - Instructions float over page before game
 - Row shakes when
+- Double the points for longer words (tbd length)
 
 ## DONE
 

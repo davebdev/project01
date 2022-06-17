@@ -5,21 +5,21 @@ const currentOptions = []; // create an array for all possible words based on le
 
 // DECLARE VARIABLES USED
 
-let letterCounter = 0;
-let currentWord = "";
-let computerGuess = "";
-let currentOptionsLength = 0;
-let letterboxes = document.querySelectorAll(".letterbox");
-let strikes = document.querySelectorAll(".strike");
-let wordMatch = false;
+let letterCounter = 0; // used to keep track of how many letters are on the page at any given time
+let currentWord = ""; // holds what is currently the partial word based on each of the letters entered so far
+let computerGuess = ""; // used in the takeCompTurn() function, holds the word the computer is aiming for
+let currentOptionsLength = 0; // used to count the array that holds the current possibilities based on the word so far
+let letterboxes = document.querySelectorAll(".letterbox"); // creates a HTML collection of all current inputs on the page
+let strikes = document.querySelectorAll(".strike"); // creates a HTML collection of all current strikes when in Hard Mode
+let wordMatch = false; // used in the checking of whether currentWord is a match with an entry of the wordList
 let gameOver = false; // set state of game
-let winner = "comp";
-let winnerTotal = "";
-let userPoints = 0;
-let compPoints = 0;
-let hardModeOn = false;
-let strikeCount = 0;
-let numPointsToWin = 20;
+let winner = "comp"; // sets the Computer as the winner of round, so that the user starts first
+let winnerTotal = ""; // eventually used to hold winner of total game
+let userPoints = 0; // holds count of user points
+let compPoints = 0; // holds count of computer points
+let hardModeOn = false; // holds state of Hard Mode (false = off, true = on). Hard Mode starts in the off position
+let strikeCount = 0; // counts how many strikes the user has gone through in Hard Mode
+let numPointsToWin = 20; // holds how many points the winner has to reach for each round to win
 
 // LOCAL STORAGE USED TO STORE NUMBER OF GAMES WON
 
@@ -392,7 +392,7 @@ function instructions() {
   const hardModeInstruction = createDomElement(
     "p",
     "innerHTML",
-    "<strong>Hard Mode:</strong> with this switched on, the user gets 3 attempts at a wild guess if they don't know any possible words. After 3 failed attempts, the computer wins.<br>Hard Mode also hides the number of possible words left."
+    "<strong>Hard Mode:</strong> with this switched on, you get 3 attempts at a wild guess if you don't know any possible words. After 3 failed attempts, the computer wins the round.<br>Hard Mode also hides the number of possible words left."
   );
   const okButtonP = createDomElement("p", "textContent", "");
   const okButton = createDomElement("button", "textContent", "OK");
@@ -545,6 +545,8 @@ function checkTotalScore(winner) {
 }
 
 function refreshPage() {
+  console.log("function 26 - refreshPage");
+
   location.reload();
 }
 
