@@ -1,6 +1,6 @@
 # Spellcheckers
 
-Spellcheckers is a game played against the computer. Loser (or computer, if first go) starts with the first letter, then the computer gets to add a letter, and each player takes turns to add letters until a word is made. Whoever finishes the word gets the points.
+Spellcheckers is an online word game built primarily with javascript, and it is a game played against the computer. Loser (or computer, if first go) starts with the first letter, then the computer gets to add a letter, and each player takes turns to add letters until a word is made. Whoever finishes the word gets the points.
 
 ## HARD MODE
 
